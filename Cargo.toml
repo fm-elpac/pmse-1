@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+
+members = [
+  "k/pmse-u",
+  "k/pmse-v8",
+  "k/pmse-jsb",
+  "pmse-se",
+  "pmse-render",
+  "p/pmse",
+  "p/pmse-gtk",
+  #p/pmse-apk
+  #p/pmse-win
+]

@@ -1,0 +1,18 @@
+[package]
+name = "pmse-jsb"
+version = "0.1.0-a1"
+edition = "2021"
+license = "LGPL-3.0-or-later"
+
+authors = ["secext2022 <secext2022@outlook.com>"]
+description = "JavaScript Sandbox for pmse"
+repository = "https://github.com/fm-elpac/pmse-1"
+keywords = ["pmse"]
+categories = []
+
+[dependencies]
+rquickjs = "^0.6.2"
+
+[features]
+default = []
+bindgen = ["rquickjs/bindgen"]

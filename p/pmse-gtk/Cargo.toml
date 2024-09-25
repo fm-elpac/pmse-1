@@ -1,0 +1,21 @@
+[package]
+name = "pmse-gtk"
+version = "0.1.0-a1"
+edition = "2021"
+license = "LGPL-3.0-or-later"
+
+authors = ["secext2022 <secext2022@outlook.com>"]
+description = "GTK4 wrapper for pmse"
+repository = "https://github.com/fm-elpac/pmse-1"
+keywords = ["pmse"]
+categories = []
+
+[dependencies]
+adw = { version = "^0.7.0", package = "libadwaita", features = ["v1_1"] }
+gtk4 = { version = "^0.9.1", features = ["v4_6"] }
+gdk4 = { version = "^0.9.0", features = ["v4_6"] }
+gdk4-wayland = { version = "^0.9.1", features = ["wayland_crate"] }
+wayland-backend = { version = "^0.3.7", features = ["client_system", "raw-window-handle"] }
+
+# vulkano version
+raw-window-handle = "0.5"

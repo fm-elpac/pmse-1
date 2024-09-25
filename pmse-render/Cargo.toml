@@ -1,0 +1,19 @@
+[package]
+name = "pmse-render"
+version = "0.1.0-a2"
+edition = "2021"
+license = "LGPL-3.0-or-later"
+
+authors = ["secext2022 <secext2022@outlook.com>"]
+description = "Vulkan render for pmse"
+repository = "https://github.com/fm-elpac/pmse-1"
+keywords = ["pmse"]
+categories = []
+
+[dependencies]
+log = "^0.4.22"
+vulkano = "^0.34.1"
+vulkano-shaders = "^0.34.0"
+
+# vulkano version
+raw-window-handle = "0.5"

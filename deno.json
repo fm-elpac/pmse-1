@@ -1,0 +1,9 @@
+{
+  "exclude": [
+    "target",
+    "tmp",
+    "p/pmse-apk/target",
+    "p/pmse-win/target",
+    "demo/apk/app/build"
+  ]
+}
