@@ -8,4 +8,4 @@ mod load;
 
 pub use draw_glyph::{draw_char, DrawOp};
 pub use font_img::{FontImg, FontImgSize};
-pub use load::{FontLoader, GlyphCache, GlyphItem, C_8192};
+pub use load::{FontLoader, GlyphCache, GlyphItem, C_8192, LANG_1, SCRIPT_1};

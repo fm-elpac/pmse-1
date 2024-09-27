@@ -11,7 +11,8 @@ mod vulkan;
 
 pub use err::E;
 pub use font::{
-    draw_char, DrawOp, FontImg, FontImgSize, FontLoader, GlyphCache, GlyphItem, C_8192,
+    draw_char, DrawOp, FontImg, FontImgSize, FontLoader, GlyphCache, GlyphItem, C_8192, LANG_1,
+    SCRIPT_1,
 };
 pub use vulkan::{draw_t, PmseRenderHost, PmseRenderInit, PmseRenderSc, 提交_gpu_执行等待};
 

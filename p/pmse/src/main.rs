@@ -50,22 +50,6 @@ fn main() -> ExitCode {
     // println!("{:#?}", 排版);
     // debug!("  after shape");
 
-    // let i = 排版[0].0.glyph.glyph_index;
-    // println!("  {}", i);
-    // let 字形 = 字体.get_c(i).unwrap();
-    // let s = 64.0;
-    // let em = 字体.em_size() as f32;
-    // // 缩放系数
-    // let z = s / em;
-    // let 图片 = draw_char(字形.命令(), (s, s), |x, y| (x * z, (em - y) * z)).unwrap();
-    // 图片.save_png(&a[2]).unwrap();
-
-    // test FontImg
-    //let font_img = env::var("PMSE_FONT_IMG").unwrap();
-    //debug!("{}", font_img);
-    //let i = FontImg::new();
-    //i.save(&font_img).unwrap();
-
     // init vulkan
     // let pri = PmseRenderInit::vulkan().unwrap();
     // let 回调: Arc<Box<dyn Cb>> = Arc::new(Box::new(回调 { pri }));

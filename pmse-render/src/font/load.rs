@@ -13,7 +13,7 @@ use allsorts::{
     gsub::{FeatureMask, Features},
     outline::{OutlineBuilder, OutlineSink},
     pathfinder_geometry::{line_segment::LineSegment2F, vector::Vector2F},
-    tables::{glyf::GlyfTable, loca::LocaTable, FontTableProvider, SfntVersion},
+    tables::{glyf::GlyfTable, loca::LocaTable, FontTableProvider, HheaTable, SfntVersion},
     tag,
     woff2::{Woff2Font, Woff2TableProvider},
 };
@@ -24,6 +24,10 @@ use crate::E;
 
 pub static C_8192: &'static str = include_str!("c_8105_8192.txt");
 
+/// 简体中文, 对应的 script 和 lang
+pub const SCRIPT_1: &'static str = "hani";
+pub const LANG_1: &'static str = "ZHS";
+
 /// 字体文件加载器 (woff2)
 pub struct FontLoader {
     // no Debug, no Clone
@@ -32,6 +36,10 @@ pub struct FontLoader {
     em_size: u16,
     /// 字符包围框 (x_min, x_max, y_min, y_max)
     bbox: (i16, i16, i16, i16),
+    /// 水平布局参数
+    hhea: HheaTable,
+    /// 行高
+    line_height: f32,
     /// 用于绘制字形
     c: GlyphCache,
 }
@@ -44,6 +52,9 @@ impl FontLoader {
         // TODO 支持指定 table index
         let mut 字体 = 读取字体(filename, 0)?;
         let (em_size, bbox) = 读取头(&字体)?;
+        let hhea = 字体.hhea_table.clone();
+        let line_height = (hhea.ascender - hhea.descender + hhea.line_gap) as f32;
+        debug!("  ({}) {:?}", line_height, hhea);
 
         // 读取字形数据
         let c = GlyphCache::new(&mut 字体)?;
@@ -52,6 +63,8 @@ impl FontLoader {
             字体,
             em_size,
             bbox,
+            hhea,
+            line_height,
             c,
         })
     }
@@ -66,6 +79,16 @@ impl FontLoader {
         self.bbox
     }
 
+    /// 获取水平布局参数
+    pub fn hhea(&self) -> HheaTable {
+        self.hhea.clone()
+    }
+
+    /// 获取行高
+    pub fn line_height(&self) -> f32 {
+        self.line_height
+    }
+
     /// 获取单个字符数据
     pub fn get_c(&self, glyph_index: u16) -> Option<&GlyphItem> {
         self.c.get(glyph_index)
@@ -74,8 +97,8 @@ impl FontLoader {
     /// 文本排版
     pub fn shape(&mut self, text: &str) -> Result<Vec<(Info, GlyphPosition)>, Box<dyn Error>> {
         // TODO 支持指定 script, lang
-        let script = tag::from_string("Han")?;
-        let lang = tag::from_string("zh")?;
+        let script = tag::from_string(SCRIPT_1)?;
+        let lang = tag::from_string(LANG_1)?;
 
         // 根据输入字符串, 查找对应的字体字符
         let 字符 = self
@@ -210,8 +233,8 @@ impl GlyphCache {
             for j in C_8192.chars() {
                 let s = String::from(j);
                 // TODO
-                let script = tag::from_string("Han")?;
-                let lang = tag::from_string("zh")?;
+                let script = tag::from_string(SCRIPT_1)?;
+                let lang = tag::from_string(LANG_1)?;
 
                 let 字符 = 字体.map_glyphs(&s, script, MatchingPresentation::NotRequired);
                 for r in 字符 {

@@ -66,12 +66,16 @@ impl FontImg {
         // 绘制 32 行, 每行 32 个字符
         const L: u8 = 32;
         // 单个字符的高度 (字体文件里面的值)
-        let em = font.em_size() as f32;
+        //let em = font.em_size() as f32;
+        // 行高
+        let em = font.line_height();
         // 要绘制的字符高度 (像素)
         let s: f32 = self.s.into();
         let em1: f32 = s / (L as f32);
         // 字符缩放比例
         let z = em1 / em;
+        // y 坐标偏移
+        let dy = (font.hhea().descender as f32) * z;
 
         // 当前绘制第 j 行, 第 i 列
         let mut i = 0;
@@ -80,7 +84,7 @@ impl FontImg {
             let s = String::from(*c);
             // 当前字符 左上角的坐标
             let x0 = (i as f32) * em1;
-            let y0 = (j as f32) * em1;
+            let y0 = (j as f32) * em1 + dy;
 
             // 绘制单个字符
             let 排版 = font.shape(&s)?;
