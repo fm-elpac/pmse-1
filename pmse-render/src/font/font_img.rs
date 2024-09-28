@@ -4,38 +4,39 @@ use std::error::Error;
 use image::GrayImage;
 use tiny_skia::Pixmap;
 
+use pmse_u::E;
+
 use super::{
-    draw_glyph::{draw_char, draw_char_new},
-    load::FontLoader,
+    draw_glyph::{绘制字符, 绘制字符_初始化},
+    load::SrFontLoader,
 };
-use crate::E;
 
 /// 字体图片的分辨率: 2K (2048), 4K (4096)
 #[derive(Debug, Clone, Copy)]
-pub enum FontImgSize {
+pub enum SrFontImgSize {
     /// 2048 x 2048
     P2k,
     /// 4096 x 4096
     P4k,
 }
 
-impl Default for FontImgSize {
+impl Default for SrFontImgSize {
     fn default() -> Self {
         Self::P2k
     }
 }
 
-impl From<FontImgSize> for u32 {
-    fn from(value: FontImgSize) -> u32 {
+impl From<SrFontImgSize> for u32 {
+    fn from(value: SrFontImgSize) -> u32 {
         match value {
-            FontImgSize::P2k => 2048,
-            FontImgSize::P4k => 4096,
+            SrFontImgSize::P2k => 2048,
+            SrFontImgSize::P4k => 4096,
         }
     }
 }
 
-impl From<FontImgSize> for f32 {
-    fn from(value: FontImgSize) -> f32 {
+impl From<SrFontImgSize> for f32 {
+    fn from(value: SrFontImgSize) -> f32 {
         let v: u32 = value.into();
         v as f32
     }
@@ -43,26 +44,26 @@ impl From<FontImgSize> for f32 {
 
 /// 字体图片: 绘制有许多字符的一张图片
 #[derive(Debug, Clone)]
-pub struct FontImg {
-    s: FontImgSize,
+pub struct SrFontImg {
+    s: SrFontImgSize,
     img: GrayImage,
     // TODO
     p: Pixmap,
 }
 
-impl FontImg {
+impl SrFontImg {
     /// 创建实例
     pub fn new() -> Result<Self, Box<dyn Error>> {
         // TODO 支持 4K
-        let s = FontImgSize::default();
+        let s = SrFontImgSize::default();
 
         let img = GrayImage::new(s.into(), s.into());
-        let p = draw_char_new((s.into(), s.into()))?;
+        let p = 绘制字符_初始化((s.into(), s.into()))?;
         Ok(Self { s, img, p })
     }
 
     /// 绘制文字, 32x32 阵列
-    pub fn draw32(&mut self, font: &mut FontLoader, text: &[char]) -> Result<(), Box<dyn Error>> {
+    pub fn draw32(&mut self, font: &mut SrFontLoader, text: &[char]) -> Result<(), Box<dyn Error>> {
         // 绘制 32 行, 每行 32 个字符
         const L: u8 = 32;
         // 单个字符的高度 (字体文件里面的值)
@@ -91,7 +92,7 @@ impl FontImg {
             let 字形 = font
                 .get_c(排版[0].0.glyph.glyph_index)
                 .ok_or(E("no glyph".into()))?;
-            draw_char(&mut self.p, 字形.命令(), |x, y| {
+            绘制字符(&mut self.p, 字形.命令(), |x, y| {
                 ((x * z) + x0, (em - y) * z + y0)
             })?;
 

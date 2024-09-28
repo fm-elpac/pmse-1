@@ -1,4 +1,4 @@
-//! pmse-jsb
+//! pmse-jsb (API 前缀: `se` 仿真层)
 #![deny(unsafe_code)]
 
 use std::error::Error;
@@ -8,17 +8,14 @@ pub use rquickjs;
 
 use rquickjs::{Context, Runtime, Value};
 
-//mod err;
-//pub use err::E;
-
 /// 用来运行 JS 代码的虚拟机 (QuickJS Runtime)
-pub struct Vm {
+pub struct SeVm {
     // no Debug
     实例: Runtime,
     语境: Context,
 }
 
-impl Vm {
+impl SeVm {
     /// 创建新实例
     pub fn new() -> Result<Self, Box<dyn Error>> {
         let 实例 = Runtime::new()?;
@@ -64,7 +61,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut vm = Vm::new().unwrap();
+        let mut vm = SeVm::new().unwrap();
         let r = vm.run_r("1 + 2", |r| r.as_int().unwrap()).unwrap();
         assert_eq!(r, 3);
     }

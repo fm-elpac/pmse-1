@@ -30,8 +30,9 @@ use vulkano::{
     swapchain::Swapchain,
 };
 
-use super::super::{shader, CreateCommand, PmseRenderHost, PmseRenderSc};
-use crate::E;
+use pmse_u::E;
+
+use super::super::{shader, CreateCommand, SrVk1, SrVkSwapchain};
 
 /// 要绘制的三角形顶点数据
 #[derive(Debug, Clone)]
@@ -82,21 +83,21 @@ struct 顶点 {
 
 /// vulkan 绘制三角形
 #[derive(Debug)]
-pub struct PmseRenderT {
-    h: PmseRenderHost,
+pub struct SrT {
+    h: SrVk1,
     /// 交换链
-    sc: PmseRenderSc,
+    sc: SrVkSwapchain,
     /// 命令缓冲区 分配器
     ca: Arc<StandardCommandBufferAllocator>,
     /// 图形管线
     管线: Arc<GraphicsPipeline>,
 }
 
-impl PmseRenderT {
+impl SrT {
     /// 初始化
-    pub fn new(h: PmseRenderHost, size: (u32, u32)) -> Result<Self, Box<dyn Error>> {
+    pub fn new(h: SrVk1, size: (u32, u32)) -> Result<Self, Box<dyn Error>> {
         // 创建交换链
-        let mut sc = PmseRenderSc::new(&h, size.into())?;
+        let mut sc = SrVkSwapchain::new(&h, size.into())?;
 
         let (阶段, 顶点入口) = 加载着色器(h.d())?;
         let (渲染过程, 分过程, 布局) = 创建渲染过程(h.d(), &阶段, sc.sc())?;

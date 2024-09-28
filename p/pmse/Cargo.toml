@@ -1,6 +1,6 @@
 [package]
 name = "pmse"
-version = "0.1.0-a1"
+version = "0.1.0-a2"
 edition = "2021"
 license = "LGPL-3.0-or-later"
 
@@ -14,5 +14,6 @@ categories = []
 log = "^0.4.22"
 env_logger = "^0.11.5"
 
-pmse-render = { path = "../../pmse-render", version = "^0.1.0-a2" }
-pmse-gtk = { path = "../pmse-gtk", version = "^0.1.0-a1" }
+pmse-u = { path = "../../k/pmse-u", version = "^0.1.0-a2" }
+pmse-render = { path = "../../pmse-render", version = "^0.1.0-a3" }
+pmse-gtk = { path = "../pmse-gtk", version = "^0.1.0-a2" }

@@ -19,17 +19,18 @@ use allsorts::{
 };
 use log::debug;
 
-use super::draw_glyph::DrawOp;
-use crate::E;
+use pmse_u::E;
 
-pub static C_8192: &'static str = include_str!("c_8105_8192.txt");
+use super::draw_glyph::SrDrawOp;
+
+pub static SR_C_8192: &'static str = include_str!("c_8105_8192.txt");
 
 /// 简体中文, 对应的 script 和 lang
-pub const SCRIPT_1: &'static str = "hani";
-pub const LANG_1: &'static str = "ZHS";
+pub const SR_SCRIPT_1: &'static str = "hani";
+pub const SR_LANG_1: &'static str = "ZHS";
 
 /// 字体文件加载器 (woff2)
-pub struct FontLoader {
+pub struct SrFontLoader {
     // no Debug, no Clone
     字体: Font<Woff2TableProvider>,
     /// 字符单位 (设计单位, 单个字符 宽/高)
@@ -41,10 +42,10 @@ pub struct FontLoader {
     /// 行高
     line_height: f32,
     /// 用于绘制字形
-    c: GlyphCache,
+    c: SrGlyphCache,
 }
 
-impl FontLoader {
+impl SrFontLoader {
     /// 加载字体文件
     pub fn new(filename: &str) -> Result<Self, Box<dyn Error>> {
         debug!("load font {}", filename);
@@ -57,7 +58,7 @@ impl FontLoader {
         debug!("  ({}) {:?}", line_height, hhea);
 
         // 读取字形数据
-        let c = GlyphCache::new(&mut 字体)?;
+        let c = SrGlyphCache::new(&mut 字体)?;
         debug!("load font ok");
         Ok(Self {
             字体,
@@ -90,15 +91,15 @@ impl FontLoader {
     }
 
     /// 获取单个字符数据
-    pub fn get_c(&self, glyph_index: u16) -> Option<&GlyphItem> {
+    pub fn get_c(&self, glyph_index: u16) -> Option<&SrGlyphItem> {
         self.c.get(glyph_index)
     }
 
     /// 文本排版
     pub fn shape(&mut self, text: &str) -> Result<Vec<(Info, GlyphPosition)>, Box<dyn Error>> {
         // TODO 支持指定 script, lang
-        let script = tag::from_string(SCRIPT_1)?;
-        let lang = tag::from_string(LANG_1)?;
+        let script = tag::from_string(SR_SCRIPT_1)?;
+        let lang = tag::from_string(SR_LANG_1)?;
 
         // 根据输入字符串, 查找对应的字体字符
         let 字符 = self
@@ -161,15 +162,15 @@ fn 读取头(
 
 /// 单个字形的数据
 #[derive(Debug, Clone)]
-pub struct GlyphItem {
+pub struct SrGlyphItem {
     /// 字符绘制命令
-    命令: Vec<DrawOp>,
+    命令: Vec<SrDrawOp>,
     /// 字符包围盒 (x_min, x_max, y_min, y_max)
     bb: Option<(i16, i16, i16, i16)>, // TODO 更多 字符数据
 }
 
-impl GlyphItem {
-    pub fn new(命令: Vec<DrawOp>, bb: Option<(i16, i16, i16, i16)>) -> Self {
+impl SrGlyphItem {
+    pub fn new(命令: Vec<SrDrawOp>, bb: Option<(i16, i16, i16, i16)>) -> Self {
         Self { 命令, bb }
     }
 
@@ -179,19 +180,19 @@ impl GlyphItem {
     }
 
     /// 获取字符绘制命令
-    pub fn 命令(&self) -> &Vec<DrawOp> {
+    pub fn 命令(&self) -> &Vec<SrDrawOp> {
         &self.命令
     }
 }
 
 /// 字形缓存, 用于快速查询字形数据
 #[derive(Debug, Clone)]
-pub struct GlyphCache {
+pub struct SrGlyphCache {
     // u16: glyph_index
-    c: HashMap<u16, GlyphItem>,
+    c: HashMap<u16, SrGlyphItem>,
 }
 
-impl GlyphCache {
+impl SrGlyphCache {
     /// 初始化 (加载数据)
     pub fn new(字体: &mut Font<Woff2TableProvider>) -> Result<Self, Box<dyn Error>> {
         let mut c = HashMap::new();
@@ -230,11 +231,11 @@ impl GlyphCache {
             }
 
             // 处理 C_8192
-            for j in C_8192.chars() {
+            for j in SR_C_8192.chars() {
                 let s = String::from(j);
                 // TODO
-                let script = tag::from_string(SCRIPT_1)?;
-                let lang = tag::from_string(LANG_1)?;
+                let script = tag::from_string(SR_SCRIPT_1)?;
+                let lang = tag::from_string(SR_LANG_1)?;
 
                 let 字符 = 字体.map_glyphs(&s, script, MatchingPresentation::NotRequired);
                 for r in 字符 {
@@ -247,7 +248,7 @@ impl GlyphCache {
                     记录.绘制(&mut cff, vec![i])?;
 
                     let 命令 = 记录.命令();
-                    c.insert(i, GlyphItem::new(命令, bb));
+                    c.insert(i, SrGlyphItem::new(命令, bb));
                 }
             }
         } else if 字体.glyph_table_flags.contains(GlyphTableFlags::GLYF) {
@@ -281,7 +282,7 @@ impl GlyphCache {
                 记录.绘制(&mut glyf, vec![i])?;
 
                 let 命令 = 记录.命令();
-                c.insert(i, GlyphItem::new(命令, bb));
+                c.insert(i, SrGlyphItem::new(命令, bb));
             }
         } else {
             return Err(Box::new(E("no CFF or GLYF table".into())));
@@ -290,7 +291,7 @@ impl GlyphCache {
         Ok(Self { c })
     }
 
-    pub fn get(&self, glyph_index: u16) -> Option<&GlyphItem> {
+    pub fn get(&self, glyph_index: u16) -> Option<&SrGlyphItem> {
         self.c.get(&glyph_index)
     }
 }
@@ -298,7 +299,7 @@ impl GlyphCache {
 /// 记录 allsorts 字符绘制命令
 #[derive(Debug, Clone)]
 struct 记录器 {
-    命令: Vec<DrawOp>,
+    命令: Vec<SrDrawOp>,
 }
 
 impl 记录器 {
@@ -306,7 +307,7 @@ impl 记录器 {
         Self { 命令: Vec::new() }
     }
 
-    pub fn 命令(self) -> Vec<DrawOp> {
+    pub fn 命令(self) -> Vec<SrDrawOp> {
         self.命令
     }
 
@@ -324,20 +325,20 @@ impl 记录器 {
 
 impl OutlineSink for 记录器 {
     fn move_to(&mut self, to: Vector2F) {
-        self.命令.push(DrawOp::MoveTo(to.x(), to.y()));
+        self.命令.push(SrDrawOp::MoveTo(to.x(), to.y()));
     }
 
     fn line_to(&mut self, to: Vector2F) {
-        self.命令.push(DrawOp::LineTo(to.x(), to.y()));
+        self.命令.push(SrDrawOp::LineTo(to.x(), to.y()));
     }
 
     fn quadratic_curve_to(&mut self, control: Vector2F, to: Vector2F) {
         self.命令
-            .push(DrawOp::QuadTo(control.x(), control.y(), to.x(), to.y()));
+            .push(SrDrawOp::QuadTo(control.x(), control.y(), to.x(), to.y()));
     }
 
     fn cubic_curve_to(&mut self, control: LineSegment2F, to: Vector2F) {
-        self.命令.push(DrawOp::CubicTo(
+        self.命令.push(SrDrawOp::CubicTo(
             control.from_x(),
             control.from_y(),
             control.to_x(),
@@ -348,6 +349,6 @@ impl OutlineSink for 记录器 {
     }
 
     fn close(&mut self) {
-        self.命令.push(DrawOp::Close);
+        self.命令.push(SrDrawOp::Close);
     }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "pmse-gtk"
-version = "0.1.0-a1"
+version = "0.1.0-a2"
 edition = "2021"
 license = "LGPL-3.0-or-later"
 
@@ -19,3 +19,5 @@ wayland-backend = { version = "^0.3.7", features = ["client_system", "raw-window
 
 # vulkano version
 raw-window-handle = "0.5"
+
+pmse-u = { path = "../../k/pmse-u", version = "^0.1.0-a2" }

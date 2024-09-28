@@ -2,7 +2,7 @@
 
 /// (物体) 刚体: 不会形变
 #[derive(Debug, Clone)]
-pub struct ObjR {
+pub struct SeObjR {
     // + (1) 物体固有物理量
     /// 质量 (单位: kg)
     pub m: f32,
@@ -33,7 +33,7 @@ pub struct ObjR {
     pub cv: Option<f32>,
 }
 
-impl Default for ObjR {
+impl Default for SeObjR {
     fn default() -> Self {
         Self {
             m: 0.0,
@@ -52,7 +52,7 @@ impl Default for ObjR {
 
 /// 刚体 模拟计算的数值限制 (下限, 上限)
 #[derive(Debug, Clone)]
-pub struct ObjLR {
+pub struct SeObjLR {
     /// 模拟计算的 时间 间隔 (单位: s) [最小值, 最大值]
     pub t: [f32; 2],
 
@@ -75,7 +75,7 @@ pub struct ObjLR {
     pub ra: [f32; 2],
 }
 
-impl Default for ObjLR {
+impl Default for SeObjLR {
     fn default() -> Self {
         Self {
             // 模拟计算中允许的时间间隔: 最小 0.001s (1ms), 最大 1s

@@ -12,7 +12,7 @@ use vulkano::{
 
 /// vulkan 宿主
 #[derive(Debug, Clone)]
-pub struct PmseRenderHost {
+pub struct SrVk1 {
     /// 物理设备
     p: Arc<PhysicalDevice>,
     /// vulkan 设备
@@ -25,7 +25,7 @@ pub struct PmseRenderHost {
     s: Arc<Surface>,
 }
 
-impl PmseRenderHost {
+impl SrVk1 {
     pub(crate) fn new(
         p: Arc<PhysicalDevice>,
         d: Arc<Device>,

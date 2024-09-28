@@ -15,16 +15,17 @@ use vulkano::{
     VulkanLibrary,
 };
 
-use super::PmseRenderHost;
-use crate::E;
+use pmse_u::E;
+
+use super::SrVk1;
 
 /// 正在初始化的 vulkan 渲染器
 #[derive(Debug, Clone)]
-pub struct PmseRenderInit {
+pub struct SrVkInit {
     库: Arc<VulkanLibrary>,
 }
 
-impl PmseRenderInit {
+impl SrVkInit {
     /// 初始化 vulkan (加载 vulkan 库 .so)
     pub fn vulkan() -> Result<Self, Box<dyn Error>> {
         debug!("init vulkan .. .");
@@ -37,7 +38,7 @@ impl PmseRenderInit {
     pub fn init_w(
         self,
         w: Arc<impl HasRawDisplayHandle + HasRawWindowHandle + Send + Sync + 'static>,
-    ) -> Result<PmseRenderHost, Box<dyn Error>> {
+    ) -> Result<SrVk1, Box<dyn Error>> {
         let 实例扩展 = Surface::required_extensions(w.as_ref());
         // 创建 vulkan 实例
         let 实例 = Instance::new(
@@ -62,7 +63,7 @@ impl PmseRenderInit {
         let 表面 = Surface::from_window(实例.clone(), w)?;
 
         // 初始化 (这部分) 完成
-        Ok(PmseRenderHost::new(物理设备, 设备, 队列, ma, 表面))
+        Ok(SrVk1::new(物理设备, 设备, 队列, ma, 表面))
     }
 }
 

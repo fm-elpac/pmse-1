@@ -1,4 +1,4 @@
-//! pmse-se 仿真层 (近似模拟, 动力学, 物理引擎)
+//! pmse-se 近似模拟, 动力学, 物理引擎 (API 前缀: `se` 仿真层)
 //!
 //! TODO 主要功能模块:
 //!
@@ -19,8 +19,8 @@
 mod or;
 mod t;
 
-pub use or::{ObjLR, ObjR};
-pub use t::{LuP, ObjP};
+pub use or::{SeObjLR, SeObjR};
+pub use t::{SeLuP, SeObjP};
 
 // TODO
 

@@ -1,6 +1,6 @@
 [package]
 name = "pmse-render"
-version = "0.1.0-a2"
+version = "0.1.0-a3"
 edition = "2021"
 license = "LGPL-3.0-or-later"
 
@@ -21,3 +21,5 @@ tiny-skia = "^0.11.4"
 
 # vulkano version
 raw-window-handle = "0.5"
+
+pmse-u = { path = "../k/pmse-u", version = "^0.1.0-a2" }

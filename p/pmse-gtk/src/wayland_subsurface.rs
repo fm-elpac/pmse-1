@@ -12,7 +12,9 @@ use gdk4_wayland::wayland_client::{
 };
 use gtk4::glib::{self, ControlFlow};
 
-use crate::{Cb, HandleBox, E};
+use pmse_u::E;
+
+use crate::{Cb, HandleBox};
 
 /// wayland subsurface (vulkan)
 #[derive(Debug, Clone)]

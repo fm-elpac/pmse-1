@@ -15,7 +15,9 @@ use gtk4::{
     ApplicationWindow,
 };
 
-use crate::{VulkanSurface, E};
+use pmse_u::E;
+
+use crate::VulkanSurface;
 
 /// wayland connection
 #[derive(Debug, Clone)]

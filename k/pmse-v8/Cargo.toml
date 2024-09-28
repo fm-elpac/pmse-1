@@ -1,6 +1,6 @@
 [package]
 name = "pmse-v8"
-version = "0.1.0-a1"
+version = "0.1.0-a2"
 edition = "2021"
 license = "LGPL-3.0-or-later"
 
@@ -11,4 +11,6 @@ keywords = ["pmse"]
 categories = []
 
 [dependencies]
-v8 = "^0.106.0"
+v8 = "^129.0.0"
+
+pmse-u = { path = "../pmse-u", version = "^0.1.0-a2" }

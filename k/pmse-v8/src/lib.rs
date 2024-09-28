@@ -1,4 +1,4 @@
-//! pmse-v8
+//! pmse-v8 (API 前缀: `yk` 基础层)
 #![deny(unsafe_code)]
 
 use std::error::Error;
@@ -11,9 +11,7 @@ use v8::{
     V8,
 };
 
-mod err;
-
-pub use err::E;
+use pmse_u::E;
 
 /// 注意: 只能调用一次
 fn 初始化_v8() {
@@ -42,11 +40,11 @@ fn 编译_js<'a>(
 
 /// 用来运行 JS 代码的虚拟机 (Isolate)
 #[derive(Debug)]
-pub struct Vm {
+pub struct YkVm {
     隔离: OwnedIsolate,
 }
 
-impl Vm {
+impl YkVm {
     /// 初始化 v8
     pub fn new() -> Self {
         初始化_v8();
@@ -94,7 +92,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let mut vm = Vm::new();
+        let mut vm = YkVm::new();
         let r = vm
             .run_r(
                 "1 + 2",

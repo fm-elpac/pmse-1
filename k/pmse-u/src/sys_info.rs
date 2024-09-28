@@ -2,7 +2,7 @@
 
 /// 运行平台的系统 (硬件配置) 信息
 #[derive(Debug, Clone)]
-pub struct SysInfo {
+pub struct YkSysInfo {
     /// CPU (核心) 数量 (单位: 1)
     pub cpu_n: u32,
     /// CPU (核心) (基准) 运行频率 (速度) (单位: MHz)
@@ -17,7 +17,7 @@ pub struct SysInfo {
     pub viewport_wh: (u32, u32),
 }
 
-impl Default for SysInfo {
+impl Default for YkSysInfo {
     /// 默认值 (获取失败)
     fn default() -> Self {
         Self {

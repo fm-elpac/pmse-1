@@ -9,7 +9,7 @@ use vulkano::{
 };
 
 /// 提交 GPU 执行命令, 等待执行完毕
-pub fn 提交_gpu_执行等待(
+pub fn sr_提交_gpu_执行等待(
     设备: &Arc<Device>,
     队列: &Arc<Queue>,
     命令: &Arc<PrimaryAutoCommandBuffer>,

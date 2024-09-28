@@ -13,12 +13,13 @@ use vulkano::{
     Validated, VulkanError,
 };
 
-use super::PmseRenderHost;
-use crate::E;
+use pmse_u::E;
+
+use super::SrVk1;
 
 /// 交换链 (swapchain) 管理
 #[derive(Debug)]
-pub struct PmseRenderSc {
+pub struct SrVkSwapchain {
     /// 设备
     设备: Arc<Device>,
     /// 队列
@@ -31,8 +32,8 @@ pub struct PmseRenderSc {
     帧缓冲: Vec<Arc<Framebuffer>>,
 }
 
-impl PmseRenderSc {
-    pub fn new(h: &PmseRenderHost, size: [u32; 2]) -> Result<Self, Box<dyn Error>> {
+impl SrVkSwapchain {
+    pub fn new(h: &SrVk1, size: [u32; 2]) -> Result<Self, Box<dyn Error>> {
         let (交换链, 图像) = 创建交换链(h.d(), h.p(), h.s(), size)?;
         // 稍后初始化 帧缓冲
         Ok(Self {
